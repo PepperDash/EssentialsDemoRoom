@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using PepperDash.Essentials.Room.Config;
 
@@ -26,5 +27,43 @@ namespace EssentialsDemoRoom
         /// </summary>
         [JsonProperty("enableAudioFollowsVideo")]
         public bool EnableAudioFollowsVideo { get; set; } = true;
+
+        /// <summary>
+        /// Tech menu config: the framework's tech password plus the demo's System Status devices.
+        /// </summary>
+        /// <remarks>
+        /// Shadows the base <see cref="EssentialsRoomPropertiesConfig.Tech"/> so the "tech" object
+        /// deserializes as <see cref="DemoRoomTechConfig"/>, while still reading/writing the base
+        /// property so anything using the base type sees the same instance.
+        /// </remarks>
+        [JsonProperty("tech")]
+        public new DemoRoomTechConfig Tech
+        {
+            get => base.Tech as DemoRoomTechConfig;
+            set => base.Tech = value;
+        }
+    }
+
+    /// <summary>
+    /// The "tech" room config object, extended with demo-specific System Status settings.
+    /// </summary>
+    public class DemoRoomTechConfig : EssentialsRoomTechConfig
+    {
+        /// <summary>
+        /// Device keys shown on the tech System Status page, in display order. Each must implement
+        /// <see cref="PepperDash.Essentials.Core.ICommunicationMonitor"/> - there's no framework
+        /// concept of "the devices to monitor" for a room, so this is how the demo tells the client
+        /// which ones to ask about.
+        /// </summary>
+        [JsonProperty("systemStatusDeviceKeys", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> SystemStatusDeviceKeys { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Device key of the rack sensor (<see cref="PepperDash.Essentials.Core.DeviceTypeInterfaces.ITemperatureSensor"/>/
+        /// <see cref="PepperDash.Essentials.Core.DeviceTypeInterfaces.IHumiditySensor"/>) shown on
+        /// the tech System Status page's "Rack Temp"/"Rack Humidity" readings.
+        /// </summary>
+        [JsonProperty("rackSensorDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
+        public string RackSensorDeviceKey { get; set; }
     }
 }

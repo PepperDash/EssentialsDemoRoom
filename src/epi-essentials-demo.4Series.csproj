@@ -27,8 +27,5 @@
     <PackageReference Include="PepperDashEssentials" Version="3.0.0-feature-secrets-manager-updates.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="PepperDash.Essentials.Core" Version="3.0.0-feature-secrets-manager-updates.2">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
   </ItemGroup>
 </Project>

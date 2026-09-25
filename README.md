@@ -41,7 +41,6 @@ talks to real AV hardware, so the program runs on any 4-series processor on its 
 The [Essentials](https://github.com/PepperDash/Essentials) v3 libraries, referenced via NuGet:
 
 - `PepperDashEssentials`
-- `PepperDash.Essentials.Core`
 
 `dotnet build` restores them; no manual NuGet step is needed.
 

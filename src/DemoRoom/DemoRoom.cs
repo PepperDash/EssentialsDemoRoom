@@ -29,7 +29,8 @@ namespace EssentialsDemoRoom
           IHasCurrentVolumeControls,
           IWarmingCooling,
           IEssentialsRoomPropertiesConfig,
-          ITechPassword
+          ITechPassword,
+          IShutdownPromptTimer
     {
     }
 
@@ -251,6 +252,21 @@ namespace EssentialsDemoRoom
         /// <inheritdoc />
         public IRoutingSinkWithFeedback DefaultDisplay { get; private set; }
 
+        /// <summary>
+        /// Source-list item key of the last route action run against this room's own source list
+        /// (its own destinations, not another room's). This is the "basic mode" notion of a single,
+        /// room-wide selected source - the source-list-item key the client should highlight, not a
+        /// device key. Essentials has no framework-level tracking for this; <see cref="DemoRoomMessenger"/>
+        /// pushes it because <c>RoomStateMessage.SelectedSourceKey</c> is declared on the client but
+        /// never actually populated by <c>MobileControlEssentialsRoomBridge</c>.
+        /// </summary>
+        public string SelectedSourceKey { get; private set; }
+
+        /// <summary>
+        /// Fires when <see cref="SelectedSourceKey"/> changes.
+        /// </summary>
+        public event EventHandler SelectedSourceKeyChanged;
+
         /// <inheritdoc />
         public void RunRouteAction(string routeKey, string sourceListKey) =>
             RunRouteAction(routeKey, sourceListKey, null);
@@ -258,6 +274,8 @@ namespace EssentialsDemoRoom
         /// <inheritdoc />
         public void RunRouteAction(string routeKey, string sourceListKey, Action successCallback)
         {
+            var isOwnSourceList = string.IsNullOrEmpty(sourceListKey) || sourceListKey == SourceListKey;
+
             if (string.IsNullOrEmpty(sourceListKey))
                 sourceListKey = SourceListKey;
 
@@ -275,6 +293,12 @@ namespace EssentialsDemoRoom
             foreach (var route in sourceListItem.RouteList ?? new List<SourceRouteListItem>())
             {
                 DoRoute(route);
+            }
+
+            if (isOwnSourceList && SelectedSourceKey != routeKey)
+            {
+                SelectedSourceKey = routeKey;
+                SelectedSourceKeyChanged?.Invoke(this, EventArgs.Empty);
             }
 
             successCallback?.Invoke();
