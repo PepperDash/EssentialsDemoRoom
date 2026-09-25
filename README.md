@@ -1,48 +1,66 @@
-![PepperDash Essentials Pluign Logo](/images/essentials-plugin-blue.png)
+![PepperDash Essentials Plugin Logo](/images/essentials-plugin-blue.png)
 
-# Essentials Plugin Template (c) 2025
+# Essentials Demo Room
+
+Room plugin for the PepperDash Essentials v3 demo system.
 
 ## License
 
-Provided under MIT license
+Provided under MIT license.
 
 ## Overview
 
-Fork this repo when creating a new plugin for Essentials. For more information about plugins, refer to the Essentials Wiki [Plugins](https://pepperdash.github.io/Essentials/docs/Plugins.html) article.
+This is one of three repos that make up the Essentials v3 demo:
 
-This repo contains example classes for the three main categories of devices:
-* `MakeModelDevice`: Used for most third party devices which require communication over a streaming mechanism such as a Com port, TCP/SSh/UDP socket, CEC, etc
-* `MakeModelLogicDevice`:  Used for devices that contain logic, but don't require any communication with third parties outside the program
-* `MakeModelCrestronDevice`:  Used for devices that represent a piece of Crestron hardware
+| Repo | Contains |
+| --- | --- |
+| [EssentialsDemoRoom](https://github.com/PepperDash/EssentialsDemoRoom) | This repo — the room plugin holding the demo's business logic |
+| [EssentialsDemoConfig](https://github.com/PepperDash/EssentialsDemoConfig) | The configuration file and the deploy definition that bundles everything into one `.cpz` |
+| [EssentialsDemoReactApp](https://github.com/PepperDash/EssentialsDemoReactApp) | The Mobile Control React app the demo's UI runs in |
 
-There are matching factory classes for each of the three categories of devices.  The `MakeModelConfigObject` should be used as a template and modified for any of the categories of device.  Same goes for the `MakeModeleBridgeJoinMap`.
+Every device the demo room drives is a mock — either an Essentials mock device (`MockDisplay`,
+`MockAudioDevice`, `MockRoutingMidpoint`, and friends) or mocked logic in this plugin. Nothing here
+talks to real AV hardware, so the program runs on any 4-series processor on its own.
 
-This also illustrates how a plugin can contain multiple devices.
+## What's in here
 
-## Cloning Instructions
+`src/DemoRoom` holds the room:
 
-After forking this repository into your own GitHub space, you can create a new repository using this one as the template.  Then you must install the necessary dependencies as indicated below.
+- **`DemoRoom.cs`** — the room device, plus the `IDemoRoom` interface that declares its capabilities.
+  In Essentials v3 a room advertises what it can do by implementing capability interfaces
+  (`IRunRouteAction`, `IHasDefaultDisplay`, `IHasCurrentVolumeControls`, …); the React app reads
+  those to decide what to render.
+- **`DemoRoomProps.cs`** — the strongly typed `properties` object from this room's config entry.
+- **`DemoRoomFactory.cs`** — maps the config `"type": "essentialsDemoRoom"` to the room class.
+  Essentials finds factories by reflection, so there is nothing else to register.
+- **`DemoRoomMessenger.cs`** — the Mobile Control messenger. Every message between the room and the
+  React app passes through here.
 
 ## Dependencies
 
-The [Essentials](https://github.com/PepperDash/Essentials) libraries are required. They referenced via nuget. You must have nuget.exe installed and in the `PATH` environment variable to use the following command. Nuget.exe is available at [nuget.org](https://dist.nuget.org/win-x86-commandline/latest/nuget.exe).
+The [Essentials](https://github.com/PepperDash/Essentials) v3 libraries, referenced via NuGet:
 
-### Installing Dependencies
+- `PepperDashEssentials`
+- `PepperDash.Essentials.Core`
 
-Dependencies will be automatically installed when
+`dotnet build` restores them; no manual NuGet step is needed.
 
-### Instructions for Renaming Solution and Files
+## Build
 
-See the Task List in Visual Studio for a guide on how to start using the template.  There is extensive inline documentation and examples as well.
+```bash
+dotnet build src/epi-essentials-demo.4Series.csproj
+```
 
-For renaming instructions in particular, see the XML `remarks` tags on class definitions
+The build targets .NET 8 and produces `output/epi-essentials-demo.4Series.<version>.cplz`, the
+program library you load alongside Essentials on the processor. For the demo you do not need to
+deploy this by hand — the EssentialsDemoConfig repo bundles it, the config file and the React app
+into a single `.cpz`.
 
-## Build Instructions (PepperDash Internal) 
+## NuGet package
 
-## Generating Nuget Package
+A NuGet package is generated on every build. To change its name or details, edit these properties in
+the `.csproj`:
 
-A nuget package is automatically generated when the plugin is build. To modify the name and other details of the package, edit the following properties in the .csproj file:
-
-1. `PackageId` - This is the name that will be used to pull the package from Nuget once it's published
-2. `PackgeProjectUrl` - This should match the URL for the plugin repo
-3. `AssemblyTitle` - This is the dll file name that is will show on a processor when the plugin is loaded
+1. `PackageId` — the name used to pull the package from NuGet once published
+2. `PackageProjectUrl` — the URL of this repo
+3. `AssemblyTitle` — the dll name shown on the processor when the plugin loads

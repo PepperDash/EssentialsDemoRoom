@@ -1,0 +1,3 @@
+# Normalize line endings: store all text files with LF in the repository.
+# Windows working trees still check out CRLF via core.autocrlf; this only fixes the index.
+* text=auto
