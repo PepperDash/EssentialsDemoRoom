@@ -35,6 +35,12 @@ namespace EssentialsDemoRoom
     ///   of "the devices to monitor" for a room, so these are demo-specific config
     ///   (<see cref="DemoRoomTechConfig.SystemStatusDeviceKeys"/>/<see cref="DemoRoomTechConfig.RackSensorDeviceKey"/>),
     ///   not something the base bridge could populate.
+    /// - <c>techDisplays</c>, which tells the client which devices back the tech Displays page and,
+    ///   for a display with a projector screen/lift, which companion devices drive those extra
+    ///   controls (<see cref="DemoRoomTechConfig.Displays"/>) - same reasoning as the System Status
+    ///   keys above.
+    /// - <c>techRoutingDeviceKey</c>, which tells the client which device backs the tech Routing page
+    ///   (<see cref="DemoRoomTechConfig.RoutingDeviceKey"/>) - same reasoning again.
     ///
     /// Deliberately NOT sent: <c>configuration.techPassword</c>. That field exists on
     /// <see cref="RoomConfiguration"/> too, but publishing the literal PIN to every connected
@@ -71,6 +77,8 @@ namespace EssentialsDemoRoom
                 SelectedSourceKey = room.SelectedSourceKey,
                 TechSystemStatusDeviceKeys = room.Props.Tech?.SystemStatusDeviceKeys,
                 TechRackSensorDeviceKey = room.Props.Tech?.RackSensorDeviceKey,
+                TechDisplays = room.Props.Tech?.Displays,
+                TechRoutingDeviceKey = room.Props.Tech?.RoutingDeviceKey,
                 Configuration = new RoomConfiguration
                 {
                     DefaultDisplayKey = room.DefaultDisplay?.Key,
@@ -105,6 +113,12 @@ namespace EssentialsDemoRoom
 
         [JsonProperty("techRackSensorDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
         public string TechRackSensorDeviceKey { get; set; }
+
+        [JsonProperty("techDisplays", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DemoRoomTechDisplayConfig> TechDisplays { get; set; }
+
+        [JsonProperty("techRoutingDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
+        public string TechRoutingDeviceKey { get; set; }
 
         [JsonProperty("configuration", NullValueHandling = NullValueHandling.Ignore)]
         public RoomConfiguration Configuration { get; set; }

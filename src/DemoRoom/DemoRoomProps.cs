@@ -65,5 +65,52 @@ namespace EssentialsDemoRoom
         /// </summary>
         [JsonProperty("rackSensorDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
         public string RackSensorDeviceKey { get; set; }
+
+        /// <summary>
+        /// Displays shown on the tech Displays page, in display order. There's no framework concept
+        /// of "the displays in a room" beyond the destination list (which only covers routing
+        /// destinations, not every controllable display), so this is how the demo tells the client
+        /// which devices to offer and, for a display with a projector screen/lift, which companion
+        /// devices back its extra controls.
+        /// </summary>
+        [JsonProperty("displays", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DemoRoomTechDisplayConfig> Displays { get; set; } = new List<DemoRoomTechDisplayConfig>();
+
+        /// <summary>
+        /// Device key of the matrix router shown on the tech Routing page. Must implement
+        /// <see cref="PepperDash.Essentials.Core.IHasNamedRoutingSlots"/> - there's no framework
+        /// concept of "the room's tech-level matrix router", so this is how the demo tells the client
+        /// which device to ask about.
+        /// </summary>
+        [JsonProperty("routingDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
+        public string RoutingDeviceKey { get; set; }
+    }
+
+    /// <summary>
+    /// One entry in <see cref="DemoRoomTechConfig.Displays"/>.
+    /// </summary>
+    public class DemoRoomTechDisplayConfig
+    {
+        /// <summary>
+        /// Device key of the display itself. Must implement
+        /// <see cref="PepperDash.Essentials.Core.IHasPowerControlWithFeedback"/> and
+        /// <see cref="PepperDash.Essentials.Core.DeviceTypeInterfaces.IHasInputs{T}"/> (of <c>string</c>).
+        /// </summary>
+        [JsonProperty("deviceKey")]
+        public string DeviceKey { get; set; }
+
+        /// <summary>
+        /// Device key of this display's projector screen (<see cref="PepperDash.Essentials.Core.DeviceTypeInterfaces.IProjectorScreenLiftControl"/>),
+        /// if it has one.
+        /// </summary>
+        [JsonProperty("screenDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
+        public string ScreenDeviceKey { get; set; }
+
+        /// <summary>
+        /// Device key of this display's projector lift (<see cref="PepperDash.Essentials.Core.DeviceTypeInterfaces.IProjectorScreenLiftControl"/>),
+        /// if it has one.
+        /// </summary>
+        [JsonProperty("liftDeviceKey", NullValueHandling = NullValueHandling.Ignore)]
+        public string LiftDeviceKey { get; set; }
     }
 }
