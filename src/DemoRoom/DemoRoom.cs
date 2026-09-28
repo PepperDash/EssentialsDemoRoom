@@ -305,6 +305,20 @@ namespace EssentialsDemoRoom
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Calls the framework's own <see cref="Extensions.ReleaseAndMakeRoute"/>/<see cref="Extensions.ReleaseRoute(IRoutingInputs)"/>,
+        /// not a demo-specific routing method - each source and display device has its own real
+        /// <see cref="RoutingOutputPort"/>/<see cref="RoutingInputPort"/>, and the config's
+        /// <c>tieLines</c> connect each source's output through <c>matrix-router</c>'s ports to each
+        /// display's input. The framework walks that tie-line graph itself: it finds a path through
+        /// the matrix (an <see cref="IRoutingMidpoint"/>), calls the matrix's own
+        /// <see cref="IRoutingMidpointWithFeedback.ExecuteSwitch"/> and the display's own
+        /// <see cref="IRoutingSinkWithFeedback.ExecuteSwitch(object)"/> in sequence, and sets
+        /// <see cref="ICurrentSources.SetCurrentSource"/> - all without this room needing to know the
+        /// matrix router exists at all. That's also what keeps the tech Routing page in sync with this
+        /// room's own routing UI: both are switching the exact same matrix device via the exact same
+        /// tie lines, not two independent notions of "what's routed".
+        /// </remarks>
         public void RunDirectRoute(string sourceKey, string destinationKey, eRoutingSignalType signalType = eRoutingSignalType.AudioVideo)
         {
             var destination = displays.Values.FirstOrDefault(d => d.Key == destinationKey);
@@ -324,12 +338,10 @@ namespace EssentialsDemoRoom
             if (!(DeviceManager.GetDeviceForKey(sourceListItem.SourceKey) is IRoutingOutputs source))
             {
                 destination.ReleaseRoute();
-                SetSinkCurrentSource(destination, null, signalType);
                 return;
             }
 
             destination.ReleaseAndMakeRoute(source, signalType);
-            SetSinkCurrentSource(destination, sourceListItem, signalType);
 
             // Audio follows video: a video route to anything other than the program audio destination
             // also sends audio to the program audio destination.
@@ -339,7 +351,6 @@ namespace EssentialsDemoRoom
                 && programAudioDestination.Key != destinationKey)
             {
                 programAudioDestination.ReleaseAndMakeRoute(source, eRoutingSignalType.Audio);
-                SetSinkCurrentSource(programAudioDestination, sourceListItem, eRoutingSignalType.Audio);
             }
         }
 
@@ -347,43 +358,24 @@ namespace EssentialsDemoRoom
         {
             if (route == null) return;
 
-            var destination = DeviceManager.GetDeviceForKey(route.DestinationKey) as IRoutingSinkWithFeedback;
-
-            if (destination == null)
+            // route.DestinationKey is a destination-*list* item key (e.g. "display1", per the
+            // routeList config), not a device key - resolve it the same way ResolveDevices
+            // populated `displays`, not via DeviceManager (which indexes by device key and would
+            // never find a match, silently no-opping every basic-mode route).
+            if (!displays.TryGetValue(route.DestinationKey, out var destination))
             {
-                this.LogWarning("Route destination '{destinationKey}' is not a routing sink", route.DestinationKey);
+                this.LogWarning("No destination '{destinationKey}' in this room", route.DestinationKey);
                 return;
             }
-
-            var sourceListItem = SourceList.Values.FirstOrDefault(s => s.SourceKey == route.SourceKey);
 
             if (DeviceManager.GetDeviceForKey(route.SourceKey) is IRoutingOutputs source)
             {
                 destination.ReleaseAndMakeRoute(source, route.Type);
-                SetSinkCurrentSource(destination, sourceListItem, route.Type);
                 return;
             }
 
             // No source device means "clear this destination" (e.g. the roomOff source-list item).
             destination.ReleaseRoute();
-            SetSinkCurrentSource(destination, null, route.Type);
-        }
-
-        /// <summary>
-        /// Writes the current source for a destination using the v3 ICurrentSources model. A null
-        /// source clears both audio and video.
-        /// </summary>
-        private void SetSinkCurrentSource(IRoutingSinkWithFeedback sink, SourceListItem sourceListItem, eRoutingSignalType signalType)
-        {
-            if (sink == null) return;
-
-            if (!(sourceListItem?.SourceDevice is IRoutingSource source))
-            {
-                sink.SetCurrentSource(eRoutingSignalType.AudioVideo, null);
-                return;
-            }
-
-            sink.SetCurrentSource(signalType, source);
         }
 
         private IRoutingSinkWithFeedback ResolveDefaultDisplay()
