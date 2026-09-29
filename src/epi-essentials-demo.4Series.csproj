@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectType>ProgramLibrary</ProjectType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>PepperDash.Essentials.Demo.Room</RootNamespace>
+    <AssemblyName>epi-essentials-demo.4Series</AssemblyName>
+    <AssemblyTitle>PepperDash.Essentials.Demo.Room</AssemblyTitle>
+    <Title>Essentials Demo Room</Title>
+    <Description>Room plugin for the PepperDash Essentials v3 demo system. All device behavior is mocked so the program can run on any 4-series processor with no real AV hardware attached.</Description>
+    <Authors>PepperDash Technology</Authors>
+    <Company>PepperDash Technology</Company>
+    <Copyright>Copyright 2026</Copyright>
+    <Version>1.0.0-local</Version>
+    <InformationalVersion>$(Version)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <PackageId>PepperDash.Essentials.Plugin.Demo.Room</PackageId>
+    <PackageProjectUrl>https://github.com/PepperDash/EssentialsDemoRoom</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PepperDash/EssentialsDemoRoom</RepositoryUrl>
+    <PackageTags>crestron net8 essentials pepperdash pepperdashessentials epi essentials plugin demo</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PepperDashEssentials" Version="3.0.0-rc.4">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
