@@ -32,8 +32,14 @@ namespace EssentialsDemoRoom.MockDevices
     /// way <c>MockLightingDevice</c> did, it's a reasonable candidate to move into
     /// <c>PepperDash.Essentials.Devices.Common</c> too.
     /// </summary>
-    public class MockHdmiSource : EssentialsDevice, IRoutingSource, IUsageTracking, IUiDisplayInfo, IVideoSync
+    public class MockHdmiSource : EssentialsDevice, IRoutingSource, IUsageTracking, IUiDisplayInfo, IVideoSync, ICommunicationMonitor
     {
+        private readonly MockStatusMonitor monitor;
+
+        /// <inheritdoc />
+        /// <remarks>Always online: there's no real connection behind this mock to lose.</remarks>
+        public StatusMonitorBase CommunicationMonitor => monitor;
+
         /// <inheritdoc />
         public uint DisplayUiType => DisplayUiConstants.TypeNoControls;
 
@@ -56,6 +62,9 @@ namespace EssentialsDemoRoom.MockDevices
             : base(key, name)
         {
             VideoSyncDetected = config?.StartsWithSync ?? true;
+
+            monitor = new MockStatusMonitor(this);
+            monitor.SetStatus(MonitorStatus.IsOk);
 
             AnyOut = new RoutingOutputPort(RoutingPortNames.AnyOut, eRoutingSignalType.Audio | eRoutingSignalType.Video,
                 eRoutingPortConnectionType.Hdmi, null, this);
