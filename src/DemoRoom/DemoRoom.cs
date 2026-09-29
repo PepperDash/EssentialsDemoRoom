@@ -306,7 +306,7 @@ namespace EssentialsDemoRoom
 
         /// <inheritdoc />
         /// <remarks>
-        /// Calls the framework's own <see cref="Extensions.ReleaseAndMakeRoute"/>/<see cref="Extensions.ReleaseRoute(IRoutingInputs)"/>,
+        /// Calls the framework's own <see cref="Extensions.ReleaseAndMakeRoute"/>/<see cref="Extensions.ClearRoute(IRoutingInputs)"/>,
         /// not a demo-specific routing method - each source and display device has its own real
         /// <see cref="RoutingOutputPort"/>/<see cref="RoutingInputPort"/>, and the config's
         /// <c>tieLines</c> connect each source's output through <c>matrix-router</c>'s ports to each
@@ -337,7 +337,7 @@ namespace EssentialsDemoRoom
 
             if (!(DeviceManager.GetDeviceForKey(sourceListItem.SourceKey) is IRoutingOutputs source))
             {
-                destination.ReleaseRoute();
+                destination.ClearRoute();
                 return;
             }
 
@@ -375,7 +375,8 @@ namespace EssentialsDemoRoom
             }
 
             // No source device means "clear this destination" (e.g. the roomOff source-list item).
-            destination.ReleaseRoute();
+            // ClearRoute, not ReleaseRoute - Release only stops usage tracking and leaves the switch in place.
+            destination.ClearRoute();
         }
 
         private IRoutingSinkWithFeedback ResolveDefaultDisplay()
