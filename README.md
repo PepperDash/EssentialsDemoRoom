@@ -4,6 +4,8 @@
 
 Room plugin for the PepperDash Essentials v3 demo system.
 
+**Documentation:** tutorials and how-to guides for the demo are at https://pepperdash.github.io/EssentialsDemoConfig/.
+
 ## License
 
 Provided under MIT license.
@@ -15,7 +17,7 @@ This is one of three repos that make up the Essentials v3 demo:
 | Repo | Contains |
 | --- | --- |
 | [EssentialsDemoRoom](https://github.com/PepperDash/EssentialsDemoRoom) | This repo — the room plugin holding the demo's business logic |
-| [EssentialsDemoConfig](https://github.com/PepperDash/EssentialsDemoConfig) | The configuration file and the deploy definition that bundles everything into one `.cpz` |
+| [EssentialsDemoConfig](https://github.com/PepperDash/EssentialsDemoConfig) | The configuration file, and the [demo documentation](https://pepperdash.github.io/EssentialsDemoConfig/) |
 | [EssentialsDemoReactApp](https://github.com/PepperDash/EssentialsDemoReactApp) | The Mobile Control React app the demo's UI runs in |
 
 Every device the demo room drives is a mock — either an Essentials mock device (`MockDisplay`,
