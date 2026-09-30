@@ -2,6 +2,8 @@
 
 # Essentials Demo Room
 
+![.NET](https://img.shields.io/badge/.NET-8.0-512BD4) ![PepperDash Essentials](https://img.shields.io/badge/PepperDash%20Essentials-≥%20v3.0.0-blue)
+
 Room plugin for the PepperDash Essentials v3 demo system.
 
 **Documentation:** tutorials and how-to guides for the demo are at https://pepperdash.github.io/EssentialsDemoConfig/.

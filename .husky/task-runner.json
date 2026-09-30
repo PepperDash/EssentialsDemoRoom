@@ -1,0 +1,11 @@
+{
+   "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+   "tasks": [
+      {
+         "name": "update-readme-badges",
+         "command": "pwsh",
+         "group": "pre-commit",
+         "args": [ "-NoProfile", "-File", ".github/scripts/Update-ReadmeBadges.ps1", "-Stage" ]
+      }
+   ]
+}
