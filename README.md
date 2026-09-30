@@ -67,3 +67,113 @@ the `.csproj`:
 1. `PackageId` — the name used to pull the package from NuGet once published
 2. `PackageProjectUrl` — the URL of this repo
 3. `AssemblyTitle` — the dll name shown on the processor when the plugin loads
+<!-- START Minimum Essentials Framework Versions -->
+### Minimum Essentials Framework Versions
+
+- 3.0.0
+- 3.0.0
+- 3.0.0
+- 3.0.0
+- 3.0.0
+<!-- END Minimum Essentials Framework Versions -->
+<!-- START Config Example -->
+### Config Example
+
+```json
+{
+    "key": "GeneratedKey",
+    "uid": 1,
+    "name": "GeneratedName",
+    "type": "DemoRoomTech",
+    "group": "Group",
+    "properties": {
+        "SystemStatusDeviceKeys": [
+            "SampleString"
+        ],
+        "RackSensorDeviceKey": "SampleString",
+        "Displays": [
+            {
+                "deviceKey": "SampleString",
+                "ScreenDeviceKey": "SampleString",
+                "LiftDeviceKey": "SampleString"
+            }
+        ],
+        "RoutingDeviceKey": "SampleString"
+    }
+}
+```
+<!-- END Config Example -->
+<!-- START Supported Types -->
+
+<!-- END Supported Types -->
+<!-- START Join Maps -->
+
+<!-- END Join Maps -->
+<!-- START Interfaces Implemented -->
+### Interfaces Implemented
+
+- IHasPowerControlWithFeedback
+- IHasInputs<string>
+- ITemperatureSensor
+- IHumiditySensor
+- IProjectorScreenLiftControl
+- IRoutingSource
+- IUsageTracking
+- IUiDisplayInfo
+- IVideoSync
+- ICommunicationMonitor
+- IDemoRoom
+<!-- END Interfaces Implemented -->
+<!-- START Base Classes -->
+### Base Classes
+
+- StatusMonitorBase
+- MessengerBase
+- EssentialsDevice
+- ReconfigurableDevice
+- EssentialsAvRoomPropertiesConfig
+<!-- END Base Classes -->
+<!-- START Public Methods -->
+### Public Methods
+
+- public void SetStatus(MonitorStatus status)
+- public void PowerOn()
+- public void PowerOff()
+- public void PowerToggle()
+- public void Select()
+- public void SetTemperatureFormat(bool setToC)
+- public void Raise()
+- public void Lower()
+- public void SetVideoSyncDetected(bool detected)
+- public void SetShutdownPromptSeconds(int seconds)
+- public void PowerOnToDefaultOrLastSource()
+- public bool RunDefaultPresentRoute()
+- public void StartShutdown(eShutdownType type)
+- public void Shutdown()
+- public void RunRouteAction(string routeKey, string sourceListKey)
+- public void RunRouteAction(string routeKey, string sourceListKey, Action successCallback)
+- public void RunDirectRoute(string sourceKey, string destinationKey, eRoutingSignalType signalType = eRoutingSignalType.AudioVideo)
+- public void SetDefaultLevels()
+- public void ValidateTechPassword(string password)
+- public void SetTechPassword(string oldPassword, string newPassword)
+- public void AddCustomActivationAction(Action action)
+<!-- END Public Methods -->
+<!-- START Bool Feedbacks -->
+### Bool Feedbacks
+
+- PowerIsOnFeedback
+- TemperatureInCFeedback
+- IsInUpPosition
+- OnFeedback
+- IsWarmingUpFeedback
+- IsCoolingDownFeedback
+<!-- END Bool Feedbacks -->
+<!-- START Int Feedbacks -->
+### Int Feedbacks
+
+- TemperatureFeedback
+- HumidityFeedback
+<!-- END Int Feedbacks -->
+<!-- START String Feedbacks -->
+
+<!-- END String Feedbacks -->
